@@ -12,7 +12,7 @@ nom=joblib.load('nominal.pkl')
 label_enc=joblib.load('lable.pkl')
 
 # Load saved dummy columns list (this is a list, not an encoder)
-nominal_enc = joblib.load("nominal.pkl")
+nominal_enc = joblib.load("dummy_columns.pkl")
 
 # Load sample data for dropdown options
 inp = pd.read_csv("mental.csv")
@@ -135,6 +135,4 @@ if st.button("Predict"):
         prediction = prediction_encoded
 
     st.subheader(f"Predicted Mental Health Status: {prediction[0]}")
-
-
 
