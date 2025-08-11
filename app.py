@@ -124,9 +124,9 @@ input_df = pd.concat([input_df.reset_index(drop=True),
                       input_nominal_dummies.reset_index(drop=True)], axis=1)
 
     # Ensure input_df has all model features in exact order
-    for col in model.feature_names_in_:
-        if col not in input_df.columns:
-            input_df[col] = 0
+for col in model.feature_names_in_:
+    if col not in input_df.columns:
+        input_df[col] = 0
     input_df = input_df[model.feature_names_in_]
 
     # Predict
