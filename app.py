@@ -93,7 +93,7 @@ if st.button("Predict"):
     input_df['Physical_Health_Issues'] = input_df['Physical_Health_Issues'].apply(
         lambda x: x.split('; ') if isinstance(x, str) and x != 'None' else []
     )
- mlb = MultiLabelBinarizer(classes=list(health_classes))
+    mlb = MultiLabelBinarizer(classes=list(health_classes))
     mlb.fit([])  # Initialize MultiLabelBinarizer
     health_encoded = mlb.transform(input_df['Physical_Health_Issues'])
     health_df = pd.DataFrame(health_encoded, columns=mlb.classes_, index=input_df.index)
