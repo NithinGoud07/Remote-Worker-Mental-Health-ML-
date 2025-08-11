@@ -101,23 +101,27 @@ if st.button("Predict"):
     # Merge health encoded columns and drop original
     input_df = pd.concat([input_df.drop('Physical_Health_Issues', axis=1), health_df], axis=1)
 
-    # Nominal columns to encode
+    # Nominal columns to encode (same as used during training)
     nominal_cols = ['Gender', 'Region', 'Industry', 'Job_Role', 'Work_Arrangement']
 
-    # Get dummies for nominal columns (drop_first=True or False depending on training)
+    # Get the column names from the trained OneHotEncoder
+    nominal_columns = nominal_enc.get_feature_names_out(nominal_cols)
+
+    # One-hot encode the incoming data
     input_nominal_dummies = pd.get_dummies(input_df[nominal_cols], drop_first=True)
 
-    # Add missing dummy columns (those from training but missing here)
-    for col in nominal_enc:
-        if col not in input_nominal_dummies.columns:
-            input_nominal_dummies[col] = 0
+# Add any missing columns from training
+for col in nominal_columns:
+    if col not in input_nominal_dummies.columns:
+        input_nominal_dummies[col] = 0
 
-    # Reorder columns to match training dummy columns order
-    input_nominal_dummies = input_nominal_dummies[nominal_enc]
+# Ensure the same column order as training
+input_nominal_dummies = input_nominal_dummies[nominal_columns]
 
-    # Drop original nominal columns and add dummy columns
-    input_df = input_df.drop(columns=nominal_cols)
-    input_df = pd.concat([input_df.reset_index(drop=True), input_nominal_dummies.reset_index(drop=True)], axis=1)
+# Drop original nominal columns and add dummy columns
+input_df = input_df.drop(columns=nominal_cols)
+input_df = pd.concat([input_df.reset_index(drop=True),
+                      input_nominal_dummies.reset_index(drop=True)], axis=1)
 
     # Ensure input_df has all model features in exact order
     for col in model.feature_names_in_:
